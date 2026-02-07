@@ -857,7 +857,7 @@
 
     <!-- Login Info Display -->
     <div class="login-info" id="loginInfo">
-        Logged in as: <span id="loggedInUser">Admin</span>
+        
     </div>
 
     <!-- Login Form -->
@@ -1112,13 +1112,7 @@
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const userEmail = localStorage.getItem('userEmail');
 
-            if (isLoggedIn === 'true' && userEmail) {
-                const displayEmail = userEmail.split('@')[0];
-                loggedInUser.textContent = displayEmail;
-                adminUsername.textContent = displayEmail;
-                loginInfo.style.display = 'block';
-                return true;
-            }
+            
             return false;
         }
 
@@ -1524,4 +1518,5 @@
     </script>
 
     </body>
+
     </html>
