@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Responsive Panel</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary: #3498db;
+            --success: #2ecc71;
+            --dark: #1a252f;
+            --bg: #f4f7f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background: var(--bg);
+            min-height: 100vh;
+            flex-direction: row;
+            /* Default PC view */
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 240px;
+            background: var(--dark);
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 16px;
+            /* Mobile par zoom nahi hoga */
+        }
+
+        /* --- UPLOAD SECTION --- */
+        .upload-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--primary);
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #f8fbff;
+            transition: 0.3s;
+        }
+
+        .drop-zone.drag-over {
+            background: #e3f2fd;
+            border-color: var(--success);
+        }
+
+        #thumb-preview {
+            width: 100%;
+            max-height: 100px;
+            object-fit: contain;
+            display: none;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .btn-submit {
+            background: var(--success);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* --- TABLE --- */
+        .table-responsive {
+            overflow-x: auto;
+            /* Mobile par table scroll hogi */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            min-width: 600px;
+            /* Table ko chhota hone se rokega */
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            color: #666;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .row-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                /* Phone par column view */
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 15px;
+                text-align: center;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .form-group {
+                flex-direction: column;
+                /* Name aur Category ek ke niche ek */
+            }
+
+            .upload-section {
+                grid-template-columns: 1fr;
+                /* Upload boxes ek ke niche ek */
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        // Redirect to login if not authenticated
+        if (localStorage.getItem('adminAuth') !== 'active') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <p style="font-size: 12px; color: #bdc3c7;">My Admin panel</p>
+        <button id="logoutBtn" style="margin-top:12px; padding:8px 10px; border-radius:6px; border:none; background:#e74c3c; color:#fff; cursor:pointer;">Logout</button>
+    </div>
+
+    <div class="main-content">
+        <div class="card">
+            <h3>Add Project</h3>
+            <form id="projectForm">
+                <div class="form-group">
+                    <input type="text" id="pTitle" placeholder="Project Name" required>
+                    <input type="text" id="pCategory" placeholder="Category" required>
+                </div>
+
+                <div class="upload-section">
+                    <div class="drop-zone" id="thumbZone">
+                        <i class='bx bx-image-add' style="font-size: 30px;"></i>
+                        <p>Thumbnail Image</p>
+                        <img id="thumb-preview" src="" alt="Preview">
+                        <div class="file-info" id="thumbName" style="color:var(--success); font-size:12px;"></div>
+                        <input type="file" id="thumbInput" accept="image/*" hidden>
+                    </div>
+
+                    <div class="drop-zone" id="fileZone">
+                        <i class='bx bx-file' style="font-size: 30px;"></i>
+                        <p>Project File</p>
+                        <div class="file-info" id="fileName" style="color:var(--success); font-size:12px;"></div>
+                        <input type="file" id="fileInput" hidden>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Add to Live List</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Live Projects</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Thumbnail</th>
+                            <th>Project Name</th>
+                            <th>Category</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projectForm = document.getElementById('projectForm');
+        const projectTableBody = document.getElementById('projectTableBody');
+        let selectedThumbBase64 = "";
+
+        // Zone Setup Function
+        function setupZone(zoneId, inputId, infoId, isThumb) {
+            const zone = document.getElementById(zoneId);
+            const input = document.getElementById(inputId);
+            const info = document.getElementById(infoId);
+
+            zone.onclick = () => input.click();
+            zone.ondragover = (e) => { e.preventDefault(); zone.classList.add('drag-over'); };
+            zone.ondragleave = () => zone.classList.remove('drag-over');
+            zone.ondrop = (e) => {
+                e.preventDefault();
+                zone.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files[0]);
+            };
+            input.onchange = (e) => handleFiles(e.target.files[0]);
+
+            function handleFiles(file) {
+                if (!file) return;
+                info.innerText = "✓ " + file.name;
+
+                if (isThumb) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        selectedThumbBase64 = e.target.result;
+                        const preview = document.getElementById('thumb-preview');
+                        preview.src = selectedThumbBase64;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        setupZone('thumbZone', 'thumbInput', 'thumbName', true);
+        setupZone('fileZone', 'fileInput', 'fileName', false);
+
+        function loadProjects() {
+            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+            projectTableBody.innerHTML = "";
+            projects.forEach((proj, index) => {
+                projectTableBody.innerHTML += `
+                    <tr>
+                        <td><img src="${proj.thumb || 'https://via.placeholder.com/50'}" class="row-thumb"></td>
+                        <td><b>${proj.title}</b></td>
+                        <td>${proj.category}</td>
+                        <td><button style="background:#ff4757; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;" onclick="deleteProject(${index})">Delete</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        projectForm.onsubmit = (e) => {
+            e.preventDefault();
+            const title = document.getElementById('pTitle').value;
+            const category = document.getElementById('pCategory').value;
+
+            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+            projects.push({ title, category, thumb: selectedThumbBase64 });
+            localStorage.setItem('myProjects', JSON.stringify(projects));
+
+            projectForm.reset();
+            document.getElementById('thumb-preview').style.display = 'none';
+            document.getElementById('thumbName').innerText = "";
+            document.getElementById('fileName').innerText = "";
+            selectedThumbBase64 = "";
+            loadProjects();
+            alert("Project Added Successfully!");
+        };
+
+        window.deleteProject = (index) => {
+            if (confirm("Delete this project?")) {
+                const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+                projects.splice(index, 1);
+                localStorage.setItem('myProjects', JSON.stringify(projects));
+                loadProjects();
+            }
+        };
+
+        loadProjects();
+
+        let selectedFileBase64 = ""; // Naya variable file ke liye
+
+            // SetupZone function ke andar handleFiles ko aise update karein
+            function handleFiles(file) {
+                if (!file) return;
+                info.innerText = "✓ " + file.name;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (isThumb) {
+                        selectedThumbBase64 = e.target.result;
+                        document.getElementById('thumb-preview').src = selectedThumbBase64;
+                        document.getElementById('thumb-preview').style.display = 'block';
+                    } else {
+                        // Agar HTML file hai toh uska content save karein
+                        selectedFileBase64 = e.target.result;
+                    }
+                };
+                // Thumbnail ke liye DataURL aur HTML ke liye Text ya DataURL
+                if (isThumb) reader.readAsDataURL(file);
+                else reader.readAsDataURL(file);
+            }
+
+            // saveProject function mein 'fileContent' bhi add karein
+            const newProject = {
+                title,
+                category,
+                thumb: selectedThumbBase64,
+                fileContent: selectedFileBase64 // File yahan save hogi
+            };
+
+    </script>
+    <script>
+        const lb = document.getElementById('logoutBtn');
+        if (lb) lb.addEventListener('click', () => {
+            localStorage.removeItem('adminAuth');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+
+</html>
