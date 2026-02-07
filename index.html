@@ -1515,8 +1515,134 @@
         window.logout = logout;
         window.backToPortfolio = backToPortfolio;
         window.deleteAdminProject = deleteAdminProject;
+
+
+
+
+    // ==================== CONFIGURATION ====================
+    const VALID_EMAIL = 'priyanshrajput42693@gmail.com';
+    const VALID_PASSWORD = 'Priyansh@123';
+
+    // ==================== DOM ELEMENTS ====================
+    const loginContainer = document.getElementById('loginContainer');
+    const loginForm = document.getElementById('loginForm');
+    const loginInfo = document.getElementById('loginInfo');
+    const loggedInUser = document.getElementById('loggedInUser');
+    const adminUsername = document.getElementById('adminUsername');
+    const loginError = document.getElementById('loginError');
+
+    // ==================== AUTH SYSTEM ====================
+    function checkLoginStatus() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userEmail = localStorage.getItem('userEmail');
+
+        if (isLoggedIn === 'true' && userEmail) {
+            const displayEmail = userEmail.split('@')[0];
+            if (loggedInUser) loggedInUser.textContent = displayEmail;
+            if (adminUsername) adminUsername.textContent = displayEmail;
+            if (loginInfo) loginInfo.style.display = 'block'; // Status dikhayein
+            return true;
+        }
+        if (loginInfo) loginInfo.style.display = 'none'; // Status chhupayein
+        return false;
+    }
+
+    function logout() {
+        if (confirm('Kya aap logout karna chahte hain?')) {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userEmail');
+            if (loginInfo) loginInfo.style.display = 'none';
+            alert('Logged out successfully!');
+            window.location.reload(); 
+        }
+    }
+
+    // ==================== LOGIN FORM LOGIC ====================
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (email === VALID_EMAIL && password === VALID_PASSWORD) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                alert('Login Successful!');
+                window.location.reload(); // Page refresh karke admin panel khulega
+            } else {
+                loginError.style.display = 'block';
+                document.getElementById('loginPassword').value = '';
+            }
+        });
+    }
+
+    // ==================== THEME MODE (DARK/LIGHT) ====================
+    function initThemeMode() {
+        const modeToggle = document.querySelector('#mode-toggle');
+        const savedMode = localStorage.getItem('lightMode');
+
+        if (savedMode === 'true') {
+            document.body.classList.add('light-mode');
+            modeToggle.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        modeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            modeToggle.classList.toggle('fa-sun');
+            modeToggle.classList.toggle('fa-moon');
+            localStorage.setItem('lightMode', isLight);
+        });
+    }
+
+    // ==================== ADMIN PANEL TOGGLE ====================
+    function openAdminPanel() {
+        document.getElementById('admin-panel-container').style.display = 'block';
+        document.getElementById('main-content').style.display = 'none';
+    }
+
+    function closeAdminPanel() {
+        document.getElementById('admin-panel-container').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+    }
+
+    // ==================== INITIALIZE ON LOAD ====================
+    window.addEventListener('DOMContentLoaded', () => {
+        initThemeMode();
+        checkLoginStatus();
+        
+        // Typing Animation call (Ensure typed.js is linked)
+        if(typeof Typed !== 'undefined') {
+            new Typed('.typing', {
+                strings: ['Web Architect', 'UI/UX Sorcerer', 'Code Wizard'],
+                typeSpeed: 70, backSpeed: 50, loop: true
+            });
+        }
+
+        // Admin Panel Button click logic
+        const adminBtn = document.getElementById('adminLoginBtn');
+        if(adminBtn) {
+            adminBtn.onclick = (e) => {
+                e.preventDefault();
+                if (checkLoginStatus()) {
+                    openAdminPanel();
+                } else {
+                    loginContainer.style.display = 'flex';
+                }
+            };
+        }
+    });
+
+    // Make functions global
+    window.logout = logout;
+    window.openAdminPanel = openAdminPanel;
+    window.closeAdminPanel = closeAdminPanel;
+
+
+        
     </script>
 
     </body>
 
     </html>
+
