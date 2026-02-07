@@ -146,20 +146,20 @@
 
     <script>
         document.getElementById('loginForm').onsubmit = (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            const btnTxt = document.getElementById('lTxt');
-            const btnSpin = document.getElementById('lSpin');
-
-            btnTxt.style.display = 'none';
-            btnSpin.style.display = 'block';
-
-            setTimeout(() => {
-                if (email === "Devdivyansh42693@gmail.com" && pass === "Priyansh@123") {
-                    localStorage.setItem("adminAuth", "active");
-                    window.location.href = "admin.html";
-                } else {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim(); // trim spaces hatane ke liye
+    const pass = document.getElementById('pass').value.trim();
+    
+    // Yahan check karein
+    if (email === "Devdivyansh42693@gmail.com" && pass === "Priyansh@123") {
+        localStorage.setItem("adminAuth", "active");
+        window.location.href = "index.html"; // Redirect to your home page
+    } else {
+        document.getElementById('err').style.display = 'block';
+        alert("Galti hai! Email ya Password sahi nahi hai.");
+    }
+};
+        
                     btnTxt.style.display = 'block';
                     btnSpin.style.display = 'none';
                     document.getElementById('err').style.display = 'block';
@@ -168,5 +168,6 @@
         };
     </script>
 </body>
+
 
 </html>
