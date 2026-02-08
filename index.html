@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Divyansh Karn | Master Web Architect</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;600;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;600;800&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
@@ -68,7 +66,7 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* CURSOR FIXED - WORKING */
+        /* CURSOR */
         .custom-cursor-enabled {
             cursor: none !important;
         }
@@ -121,6 +119,16 @@
             align-items: center;
             z-index: 10000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
 
         .logo {
@@ -128,6 +136,11 @@
             font-weight: 800;
             color: #fff;
             letter-spacing: 2px;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .logo span {
@@ -146,10 +159,27 @@
             margin-left: 3.5rem;
             font-weight: 500;
             transition: var(--transition);
+            position: relative;
+        }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--main-color);
+            transition: width 0.3s ease;
+        }
+
+        .navbar a:hover::after {
+            width: 100%;
         }
 
         .navbar a:hover {
             color: var(--main-color);
+            text-shadow: 0 0 10px var(--main-color);
         }
 
         #mode-toggle {
@@ -180,6 +210,7 @@
         .home-content h3 {
             font-size: 3rem;
             color: var(--main-color);
+            animation: fadeInUp 0.8s ease 0.2s both;
         }
 
         .home-content h1 {
@@ -190,6 +221,7 @@
             background: linear-gradient(45deg, #fff, var(--main-color), var(--accent-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease 0.4s both;
         }
 
         .home-content p {
@@ -198,6 +230,7 @@
             max-width: 60rem;
             line-height: 1.6;
             opacity: 0.8;
+            animation: fadeInUp 0.8s ease 0.6s both;
         }
 
         .home-img .glowing-circle {
@@ -207,6 +240,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            animation: float 6s ease-in-out infinite;
         }
 
         .image-box {
@@ -216,12 +250,18 @@
             overflow: hidden;
             z-index: 10;
             border: 6px solid var(--bg-color);
+            animation: fadeIn 1s ease 0.8s both;
         }
 
         .image-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .image-box:hover img {
+            transform: scale(1.05);
         }
 
         .glowing-circle span {
@@ -234,16 +274,39 @@
             box-shadow: var(--neon-glow);
         }
 
-        @keyframes morph {
+        .glowing-circle span:nth-child(2) {
+            animation-delay: -4s;
+            opacity: 0.7;
+            border-color: var(--accent-color);
+        }
 
-            0%,
-            100% {
+        @keyframes morph {
+            0%, 100% {
                 border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
                 transform: rotate(0deg);
             }
-
             50% {
                 border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
@@ -258,21 +321,43 @@
             box-shadow: var(--neon-glow);
             transition: var(--transition);
             cursor: pointer;
+            animation: fadeInUp 0.8s ease 0.8s both;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
             transform: scale(1.05);
             filter: brightness(1.2);
+            box-shadow: 0 0 30px var(--main-color);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
         }
 
         .heading {
             font-size: 6.5rem;
             text-align: center;
             margin-bottom: 8rem;
+            position: relative;
+        }
+
+        .heading::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--main-color);
+            border-radius: 2px;
         }
 
         .heading span {
             color: var(--main-color);
+            text-shadow: 0 0 10px rgba(0, 171, 240, 0.5);
         }
 
         .container {
@@ -290,12 +375,39 @@
             padding: 5rem 3rem;
             text-align: center;
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
 
         .card i {
             font-size: 6rem;
             color: var(--main-color);
             margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover i {
+            transform: scale(1.2) rotate(5deg);
         }
 
         .card h3 {
@@ -310,6 +422,11 @@
             overflow: hidden;
             background: var(--glass-bg);
             display: flex;
+            transition: transform 0.3s ease;
+        }
+
+        .portfolio-box:hover {
+            transform: translateY(-10px);
         }
 
         .portfolio-box img {
@@ -348,6 +465,7 @@
             font-size: 3rem;
             color: #000;
             font-weight: 700;
+            margin-bottom: 1rem;
         }
 
         .portfolio-layer p {
@@ -370,6 +488,12 @@
             transition: 0.3s;
         }
 
+        .portfolio-layer a:hover {
+            background: var(--bg-color);
+            color: #fff;
+            transform: rotate(15deg) scale(1.1);
+        }
+
         .contact-container form input,
         .contact-container form textarea {
             width: 100%;
@@ -380,6 +504,12 @@
             color: var(--text-color);
             border-radius: 1rem;
             margin-bottom: 2rem;
+            transition: 0.3s;
+        }
+        .contact-container form input:focus,
+        .contact-container form textarea:focus {
+            border-color: var(--main-color);
+            box-shadow: 0 0 15px rgba(0, 171, 240, 0.3);
         }
 
         #form-status {
@@ -409,6 +539,11 @@
         .rocket-to-top img {
             width: 100%;
             filter: drop-shadow(0 0 10px var(--main-color));
+            transition: transform 0.3s ease;
+        }
+
+        .rocket-to-top:hover img {
+            transform: scale(1.1);
         }
 
         .rocket-to-top:not(.launching) {
@@ -416,12 +551,9 @@
         }
 
         @keyframes rocketFloat {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: translateY(0);
             }
-
             50% {
                 transform: translateY(-15px);
             }
@@ -435,7 +567,6 @@
             0% {
                 transform: translateY(0) scale(1);
             }
-
             100% {
                 transform: translateY(-120vh) scale(0.7);
             }
@@ -446,6 +577,11 @@
             color: var(--text-color);
             cursor: pointer;
             display: none;
+            transition: 0.3s;
+        }
+
+        .menu-icon:hover {
+            color: var(--main-color);
         }
 
         /* LOGIN FORM STYLES */
@@ -461,6 +597,12 @@
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .login-box {
@@ -481,7 +623,6 @@
                 opacity: 0;
                 transform: translateY(50px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -535,11 +676,14 @@
             cursor: pointer;
             transition: 0.3s;
             margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
         .login-btn:hover {
             background: #0099d8;
             transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 171, 240, 0.3);
         }
 
         .close-login {
@@ -554,6 +698,7 @@
 
         .close-login:hover {
             color: var(--danger);
+            transform: rotate(90deg);
         }
 
         .error-message {
@@ -561,9 +706,16 @@
             font-size: 1.4rem;
             margin-top: 1rem;
             display: none;
+            animation: shake 0.5s ease;
         }
 
-        /* ADMIN PANEL STYLES - FIXED */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* ADMIN PANEL STYLES */
         .admin-panel-container {
             display: none;
             position: fixed;
@@ -574,6 +726,7 @@
             background: #f4f7f6;
             z-index: 99999999;
             overflow-y: auto;
+            animation: fadeIn 0.3s ease;
         }
 
         .admin-body {
@@ -594,6 +747,16 @@
             position: fixed;
             height: 100vh;
             z-index: 100;
+            animation: slideInLeft 0.5s ease;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
         }
 
         .admin-main-content {
@@ -601,6 +764,7 @@
             width: calc(100% - 240px);
             padding: 30px;
             transition: 0.3s;
+            animation: fadeIn 0.5s ease 0.2s both;
         }
 
         .admin-card {
@@ -609,6 +773,11 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
         }
 
         .admin-form-group {
@@ -624,6 +793,12 @@
             border-radius: 8px;
             outline: none;
             font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .admin-input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
         }
 
         .admin-upload-section {
@@ -643,9 +818,20 @@
             transition: 0.3s;
         }
 
+        .admin-drop-zone:hover {
+            background: #e3f2fd;
+            transform: translateY(-2px);
+        }
+
         .admin-drop-zone.drag-over {
             background: #e3f2fd;
             border-color: #2ecc71;
+            animation: pulse 0.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { box-shadow: 0 0 0 rgba(46, 204, 113, 0.4); }
+            to { box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); }
         }
 
         #admin-thumb-preview {
@@ -655,6 +841,7 @@
             display: none;
             margin-top: 10px;
             border-radius: 5px;
+            animation: fadeIn 0.5s ease;
         }
 
         .admin-btn-submit {
@@ -667,10 +854,24 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 16px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-btn-submit:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .admin-btn-submit:active {
+            transform: translateY(0);
         }
 
         .admin-table-responsive {
             overflow-x: auto;
+            animation: fadeIn 0.5s ease;
         }
 
         .admin-table {
@@ -685,11 +886,17 @@
             padding: 12px;
             text-align: left;
             color: #666;
+            border-bottom: 2px solid #eee;
         }
 
         .admin-td {
             padding: 12px;
             border-bottom: 1px solid #eee;
+            transition: 0.3s;
+        }
+
+        .admin-table tr:hover .admin-td {
+            background: #f9f9f9;
         }
 
         .admin-row-thumb {
@@ -697,6 +904,11 @@
             height: 50px;
             object-fit: cover;
             border-radius: 6px;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-row-thumb:hover {
+            transform: scale(1.1);
         }
 
         .admin-delete-btn {
@@ -706,6 +918,12 @@
             padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .admin-delete-btn:hover {
+            background: #ff2e43;
+            transform: scale(1.05);
         }
 
         .admin-back-btn {
@@ -718,6 +936,15 @@
             font-weight: bold;
             margin-top: 20px;
             font-size: 1.6rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-back-btn:hover {
+            background: #ff2e43;
+            transform: translateX(-5px);
         }
 
         .admin-logout-btn {
@@ -731,22 +958,16 @@
             margin-top: 10px;
             font-size: 1.6rem;
             width: 100%;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        /* LOGIN INFO */
-        .login-info {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            background: var(--main-color);
-            color: #000;
-            padding: 1rem 2rem;
-            border-radius: 5rem;
-            font-size: 1.4rem;
-            font-weight: 600;
-            z-index: 10002;
-            display: none;
-            box-shadow: var(--neon-glow);
+        .admin-logout-btn:hover {
+            background: #e67e22;
+            transform: scale(1.05);
         }
 
         /* FORGOT PASSWORD */
@@ -760,10 +981,34 @@
             color: var(--main-color);
             font-size: 1.4rem;
             cursor: pointer;
+            transition: 0.3s;
         }
 
         .forgot-password a:hover {
             text-decoration: underline;
+            color: var(--accent-color);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--main-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Media Queries */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -780,6 +1025,24 @@
                 text-align: center;
             }
 
+            .home-img .glowing-circle {
+                width: 35rem;
+                height: 35rem;
+            }
+
+            .image-box {
+                width: 28rem;
+                height: 28rem;
+            }
+
+            .home-content h1 {
+                font-size: 6rem;
+            }
+
+            .heading {
+                font-size: 5rem;
+            }
+
             .menu-icon {
                 display: block;
             }
@@ -793,11 +1056,24 @@
                 background: var(--header-bg);
                 backdrop-filter: blur(20px);
                 display: none;
+                flex-direction: column;
+                border-top: 1px solid rgba(255, 255, 255, 0.05);
             }
 
             .navbar.active {
                 display: flex;
-                flex-direction: column;
+                animation: slideDown 0.3s ease;
+            }
+
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .navbar a,
@@ -806,6 +1082,7 @@
                 font-size: 2rem;
                 margin: 2rem 0;
                 margin-left: 0;
+                text-align: center;
             }
 
             .login-box {
@@ -847,18 +1124,40 @@
             .admin-card {
                 padding: 15px;
             }
+
+            .portfolio-layer h4 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            section {
+                padding: 10rem 5% 6rem;
+            }
+
+            .home-content h1 {
+                font-size: 4.5rem;
+            }
+
+            .heading {
+                font-size: 4rem;
+            }
+
+            .card {
+                padding: 3rem 2rem;
+            }
+
+            .btn {
+                padding: 1.2rem 3rem;
+                font-size: 1.6rem;
+            }
         }
     </style>
-</head>
 
+    </head>
 <body>
     <div id="cursor"></div>
     <div id="cursor-blur"></div>
-
-    <!-- Login Info Display -->
-    <div class="login-info" id="loginInfo">
-        
-    </div>
 
     <!-- Login Form -->
     <div class="login-container" id="loginContainer">
@@ -877,15 +1176,13 @@
                     <input type="password" id="loginPassword" placeholder="Password" required>
                 </div>
 
-                
-
                 <div class="error-message" id="loginError">
                     Invalid email or password!
                 </div>
                 <button type="submit" class="login-btn">Login</button>
             </form>
             <div style="margin-top: 3rem; font-size: 1.4rem; color: var(--text-color); opacity: 0.7;">
-     
+                Demo: priyanshrajput42693@gmail.com / Priyansh@123
             </div>
         </div>
     </div>
@@ -895,8 +1192,7 @@
         <div class="admin-body">
             <div class="admin-sidebar">
                 <h2>🔐 Admin Panel</h2>
-                <p style="font-size: 12px; color: #bdc3c7; margin-bottom: 20px;">Welcome, <span
-                        id="adminUsername">Admin</span></p>
+                <p style="font-size: 12px; color: #bdc3c7; margin-bottom: 20px;">Welcome, <span id="adminUsername">Admin</span></p>
                 <button onclick="backToPortfolio()" class="admin-back-btn">
                     <i class="fas fa-arrow-left"></i> Back to Portfolio
                 </button>
@@ -910,8 +1206,7 @@
                     <h3>➕ Add New Project</h3>
                     <form id="admin-projectForm">
                         <div class="admin-form-group">
-                            <input type="text" id="admin-pTitle" placeholder="Project Name" required
-                                class="admin-input">
+                            <input type="text" id="admin-pTitle" placeholder="Project Name" required class="admin-input">
                             <input type="text" id="admin-pCategory" placeholder="Category" required class="admin-input">
                         </div>
 
@@ -920,8 +1215,7 @@
                                 <i class='bx bx-image-add' style="font-size: 30px; color: #3498db;"></i>
                                 <p>Thumbnail Image</p>
                                 <img id="admin-thumb-preview" src="" alt="Preview">
-                                <div class="file-info" id="admin-thumbName" style="color:#2ecc71; font-size:12px;">
-                                </div>
+                                <div class="file-info" id="admin-thumbName" style="color:#2ecc71; font-size:12px;"></div>
                                 <input type="file" id="admin-thumbInput" accept="image/*" hidden>
                             </div>
 
@@ -979,15 +1273,15 @@
                 <h3>Hello, it's Me</h3>
                 <h1>Divyansh Karn</h1>
                 <h3>And I'm a <span class="typing"></span></h3>
-                <p>Transforming complex ideas into seamless digital experiences. Specializing in
-                    high-performance architectures and immersive UI/UX.</p>
+                <p>Transforming complex ideas into seamless digital experiences. Specializing in high-performance architectures and immersive UI/UX.</p>
                 <a href="#portfolio" class="btn">View My Portfolio</a>
             </div>
             <div class="home-img">
                 <div class="glowing-circle">
                     <span></span>
+                    <span></span>
                     <div class="image-box">
-                        <img src="port1.png" alt="Profile">
+                        <img src="port1.png" alt="Divyansh Karn">
                     </div>
                 </div>
             </div>
@@ -1013,7 +1307,9 @@
 
         <section class="portfolio" id="portfolio">
             <h2 class="heading">My <span>Projects</span></h2>
-            <div class="container" id="projectContainer"></div>
+            <div class="container" id="projectContainer">
+                <!-- Projects will load here dynamically -->
+            </div>
         </section>
 
         <section class="contact" id="contact">
@@ -1034,34 +1330,40 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
     
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     
     <script>
-        // ==================== DARK/LIGHT MODE ====================
+        // ==================== CONFIGURATION ====================
+        const VALID_EMAIL = 'priyanshrajput42693@gmail.com';
+        const VALID_PASSWORD = 'Priyansh@123';
+
+        // ==================== DOM ELEMENTS ====================
+        const loginContainer = document.getElementById('loginContainer');
+        const loginForm = document.getElementById('loginForm');
+        const adminUsername = document.getElementById('adminUsername');
+        const loginError = document.getElementById('loginError');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const closeLogin = document.getElementById('closeLogin');
+
+        // ==================== THEME MODE (DARK/LIGHT) ====================
         function initThemeMode() {
             const modeToggle = document.querySelector('#mode-toggle');
             const savedMode = localStorage.getItem('lightMode');
 
             if (savedMode === 'true') {
                 document.body.classList.add('light-mode');
-                modeToggle.classList.add('fa-sun');
-                modeToggle.classList.remove('fa-moon');
-            } else {
-                modeToggle.classList.add('fa-moon');
-                modeToggle.classList.remove('fa-sun');
+                modeToggle.classList.replace('fa-moon', 'fa-sun');
             }
 
             modeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('light-mode');
+                const isLight = document.body.classList.contains('light-mode');
                 modeToggle.classList.toggle('fa-sun');
                 modeToggle.classList.toggle('fa-moon');
-                const isLight = document.body.classList.contains('light-mode');
                 localStorage.setItem('lightMode', isLight);
             });
         }
@@ -1095,35 +1397,65 @@
             });
         }
 
-        // ==================== LOGIN SYSTEM ====================
-        const loginContainer = document.getElementById('loginContainer');
-        const loginForm = document.getElementById('loginForm');
-        const adminLoginBtn = document.getElementById('adminLoginBtn');
-        const closeLogin = document.getElementById('closeLogin');
-        const loginError = document.getElementById('loginError');
-        const loginInfo = document.getElementById('loginInfo');
-        const loggedInUser = document.getElementById('loggedInUser');
-        const adminUsername = document.getElementById('adminUsername');
-
-        const VALID_EMAIL = 'Devdivyansh42693@gmail.com';
-        const VALID_PASSWORD = 'Priyansh@123';
-
-        function checkLoginStatus() {
+        // ==================== AUTH SYSTEM ====================
+        function isLoggedIn() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const userEmail = localStorage.getItem('userEmail');
-
-            
-            return false;
+            return isLoggedIn === 'true' && userEmail;
         }
 
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userEmail');
+                closeAdminPanel();
+                alert('Logged out successfully!');
+            }
+        }
+
+        // ==================== LOGIN FORM LOGIC ====================
+        if (loginForm) {
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value;
+
+                if (email === VALID_EMAIL && password === VALID_PASSWORD) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userEmail', email);
+                    
+                    if (adminUsername) {
+                        const displayEmail = email.split('@')[0];
+                        adminUsername.textContent = displayEmail;
+                    }
+                    
+                    loginContainer.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    loginError.style.display = 'none';
+                    loginForm.reset();
+                    
+                    // Auto open admin panel after login
+                    openAdminPanel();
+                } else {
+                    loginError.style.display = 'block';
+                    document.getElementById('loginPassword').value = '';
+                }
+            });
+        }
+
+        // ==================== ADMIN PANEL TOGGLE ====================
         function openAdminPanel() {
-            const adminPanel = document.getElementById('admin-panel-container');
-            const mainContent = document.getElementById('main-content');
-
-            adminPanel.style.display = 'block';
-            mainContent.style.display = 'none';
+            // Check if user is logged in
+            if (!isLoggedIn()) {
+                loginContainer.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                return;
+            }
+            
+            document.getElementById('admin-panel-container').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
             document.body.style.overflow = 'hidden';
-
+            
             // Refresh admin data
             if (typeof loadAdminProjects === 'function') {
                 loadAdminProjects();
@@ -1131,68 +1463,9 @@
         }
 
         function closeAdminPanel() {
-            const adminPanel = document.getElementById('admin-panel-container');
-            const mainContent = document.getElementById('main-content');
-
-            adminPanel.style.display = 'none';
-            mainContent.style.display = 'block';
+            document.getElementById('admin-panel-container').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
             document.body.style.overflow = 'auto';
-        }
-
-        adminLoginBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (!checkLoginStatus()) {
-                loginContainer.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            } else {
-                openAdminPanel();
-            }
-        });
-
-        closeLogin.addEventListener('click', function () {
-            loginContainer.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-                // Success
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userEmail', email);
-
-                const displayEmail = email.split('@')[0];
-                loggedInUser.textContent = displayEmail;
-                adminUsername.textContent = displayEmail;
-                loginInfo.style.display = 'block';
-
-                loginContainer.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                loginError.style.display = 'none';
-
-                loginForm.reset();
-
-                // Auto open admin panel after login
-                openAdminPanel();
-            } else {
-                // Error
-                loginError.style.display = 'block';
-                document.getElementById('loginPassword').value = '';
-            }
-        });
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userEmail');
-                loginInfo.style.display = 'none';
-                closeAdminPanel();
-                alert('Logged out successfully!');
-            }
         }
 
         function backToPortfolio() {
@@ -1201,28 +1474,34 @@
 
         // ==================== TYPING ANIMATION ====================
         function initTyping() {
-            new Typed('.typing', {
-                strings: ['Web Architect', 'UI/UX Sorcerer', 'Full Stack Developer', 'Code Wizard'],
-                typeSpeed: 70,
-                backSpeed: 50,
-                loop: true
-            });
+            if (typeof Typed !== 'undefined') {
+                new Typed('.typing', {
+                    strings: ['Web Architect', 'UI/UX Sorcerer', 'Full Stack Developer', 'Code Wizard'],
+                    typeSpeed: 70,
+                    backSpeed: 50,
+                    loop: true
+                });
+            }
         }
 
         // ==================== SCROLL REVEAL ====================
         function initScrollReveal() {
-            ScrollReveal().reveal('.home-content, .home-img, .card, .portfolio-box', {
-                distance: '50px',
-                duration: 1000,
-                delay: 200,
-                origin: 'bottom',
-                interval: 150
-            });
+            if (typeof ScrollReveal !== 'undefined') {
+                ScrollReveal().reveal('.home-content, .home-img, .card, .portfolio-box', {
+                    distance: '50px',
+                    duration: 1000,
+                    delay: 200,
+                    origin: 'bottom',
+                    interval: 150
+                });
+            }
         }
 
         // ==================== ROCKET TO TOP ====================
         function initRocketBtn() {
             const rocketBtn = document.querySelector('#rocketBtn');
+            if (!rocketBtn) return;
+            
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 500) {
                     rocketBtn.classList.add('active');
@@ -1442,12 +1721,15 @@
                     </div>`).join('');
             }
 
-            VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
-                max: 15,
-                speed: 400,
-                glare: true,
-                "max-glare": 0.2
-            });
+            // Initialize tilt effect
+            if (typeof VanillaTilt !== 'undefined') {
+                VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+                    max: 15,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.2
+                });
+            }
         }
 
         // ==================== CONTACT FORM ====================
@@ -1480,6 +1762,23 @@
             }
         }
 
+        // ==================== EVENT LISTENERS ====================
+        if (adminLoginBtn) {
+            adminLoginBtn.onclick = (e) => {
+                e.preventDefault();
+                openAdminPanel();
+            };
+        }
+
+        if (closeLogin) {
+            closeLogin.onclick = function () {
+                loginContainer.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                loginError.style.display = 'none';
+                loginForm.reset();
+            };
+        }
+
         // ==================== INITIALIZE ALL FUNCTIONS ====================
         window.addEventListener('DOMContentLoaded', function () {
             initThemeMode();
@@ -1490,159 +1789,24 @@
             initCursor();
             initAdminPanel();
             initContactForm();
-            checkLoginStatus();
+            
             loadDynamicProjects();
-        });
-
-        window.addEventListener('load', function () {
-            checkLoginStatus();
-            loadDynamicProjects();
-
-            // Also check URL hash for admin panel
+            
+            // Check URL hash for admin panel
             if (window.location.hash === '#admin') {
-                if (checkLoginStatus()) {
-                    openAdminPanel();
-                } else {
-                    loginContainer.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                }
+                openAdminPanel();
             }
         });
 
         // Make functions available globally
         window.openAdminPanel = openAdminPanel;
         window.closeAdminPanel = closeAdminPanel;
+            
         window.logout = logout;
         window.backToPortfolio = backToPortfolio;
         window.deleteAdminProject = deleteAdminProject;
-
-
-
-
-    // ==================== CONFIGURATION ====================
-    const VALID_EMAIL = 'priyanshrajput42693@gmail.com';
-    const VALID_PASSWORD = 'Priyansh@123';
-
-    // ==================== DOM ELEMENTS ====================
-    const loginContainer = document.getElementById('loginContainer');
-    const loginForm = document.getElementById('loginForm');
-    const loginInfo = document.getElementById('loginInfo');
-    const loggedInUser = document.getElementById('loggedInUser');
-    const adminUsername = document.getElementById('adminUsername');
-    const loginError = document.getElementById('loginError');
-
-    // ==================== AUTH SYSTEM ====================
-    function checkLoginStatus() {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const userEmail = localStorage.getItem('userEmail');
-
-        if (isLoggedIn === 'true' && userEmail) {
-            const displayEmail = userEmail.split('@')[0];
-            if (loggedInUser) loggedInUser.textContent = displayEmail;
-            if (adminUsername) adminUsername.textContent = displayEmail;
-            if (loginInfo) loginInfo.style.display = 'block'; // Status dikhayein
-            return true;
-        }
-        if (loginInfo) loginInfo.style.display = 'none'; // Status chhupayein
-        return false;
-    }
-
-    function logout() {
-        if (confirm('Kya aap logout karna chahte hain?')) {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userEmail');
-            if (loginInfo) loginInfo.style.display = 'none';
-            alert('Logged out successfully!');
-            window.location.reload(); 
-        }
-    }
-
-    // ==================== LOGIN FORM LOGIC ====================
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userEmail', email);
-                alert('Login Successful!');
-                window.location.reload(); // Page refresh karke admin panel khulega
-            } else {
-                loginError.style.display = 'block';
-                document.getElementById('loginPassword').value = '';
-            }
-        });
-    }
-
-    // ==================== THEME MODE (DARK/LIGHT) ====================
-    function initThemeMode() {
-        const modeToggle = document.querySelector('#mode-toggle');
-        const savedMode = localStorage.getItem('lightMode');
-
-        if (savedMode === 'true') {
-            document.body.classList.add('light-mode');
-            modeToggle.classList.replace('fa-moon', 'fa-sun');
-        }
-
-        modeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            modeToggle.classList.toggle('fa-sun');
-            modeToggle.classList.toggle('fa-moon');
-            localStorage.setItem('lightMode', isLight);
-        });
-    }
-
-    // ==================== ADMIN PANEL TOGGLE ====================
-    function openAdminPanel() {
-        document.getElementById('admin-panel-container').style.display = 'block';
-        document.getElementById('main-content').style.display = 'none';
-    }
-
-    function closeAdminPanel() {
-        document.getElementById('admin-panel-container').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-    }
-
-    // ==================== INITIALIZE ON LOAD ====================
-    window.addEventListener('DOMContentLoaded', () => {
-        initThemeMode();
-        checkLoginStatus();
-        
-        // Typing Animation call (Ensure typed.js is linked)
-        if(typeof Typed !== 'undefined') {
-            new Typed('.typing', {
-                strings: ['Web Architect', 'UI/UX Sorcerer', 'Code Wizard'],
-                typeSpeed: 70, backSpeed: 50, loop: true
-            });
-        }
-
-        // Admin Panel Button click logic
-        const adminBtn = document.getElementById('adminLoginBtn');
-        if(adminBtn) {
-            adminBtn.onclick = (e) => {
-                e.preventDefault();
-                if (checkLoginStatus()) {
-                    openAdminPanel();
-                } else {
-                    loginContainer.style.display = 'flex';
-                }
-            };
-        }
-    });
-
-    // Make functions global
-    window.logout = logout;
-    window.openAdminPanel = openAdminPanel;
-    window.closeAdminPanel = closeAdminPanel;
-
-
-        
+        window.isLoggedIn = isLoggedIn;
     </script>
-
-    </body>
-
-    </html>
-
+</body>
+</html>
+        
