@@ -1160,6 +1160,38 @@
     <div id="cursor-blur"></div>
 
 
+
+<!-- BODY के START में cursor divs के बाद -->
+<div class="login-container" id="loginContainer">
+    <div class="login-box">
+        <div class="close-login" id="closeLogin">
+            <i class="fas fa-times"></i>
+        </div>
+        <h2>Admin Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="loginUsername" placeholder="Username" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+            </div>
+            <div class="error-message" id="loginError">
+                Invalid username or password!
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        <div style="margin-top: 3rem; font-size: 1.4rem; color: var(--text-color); opacity: 0.7;">
+            Username: admin | Password: admin123
+        </div>
+    </div>
+</div>
+
+<!-- Navbar में Admin Link (यह पहले से होना चाहिए) -->
+<a href="#" id="adminLoginBtn" style="color: var(--main-color);">Admin</a>
+    
+
     <!-- Full Admin Panel -->
     <div id="admin-panel-container" class="admin-panel-container">
         <div class="admin-body">
@@ -1783,4 +1815,5 @@
 </body>
 </html>
         
+
 
