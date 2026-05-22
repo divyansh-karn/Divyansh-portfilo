@@ -1188,6 +1188,73 @@
     </div>
 </div>
 
+<!-- Navbar में Admin Link (यह पहले से होना चाहिए) -->
+<a href="#" id="adminLoginBtn" style="color: var(--main-color);">Admin</a>
+    
+
+    <!-- Full Admin Panel -->
+    <div id="admin-panel-container" class="admin-panel-container">
+        <div class="admin-body">
+            <div class="admin-sidebar">
+                <h2>🔐 Admin Panel</h2>
+                <p style="font-size: 12px; color: #bdc3c7; margin-bottom: 20px;">Welcome, <span id="adminUsername">Admin</span></p>
+                <button onclick="backToPortfolio()" class="admin-back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Portfolio
+                </button>
+                <button onclick="logout()" class="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <div class="admin-main-content">
+                <div class="admin-card">
+                    <h3>➕ Add New Project</h3>
+                    <form id="admin-projectForm">
+                        <div class="admin-form-group">
+                            <input type="text" id="admin-pTitle" placeholder="Project Name" required class="admin-input">
+                            <input type="text" id="admin-pCategory" placeholder="Category" required class="admin-input">
+                        </div>
+
+                        <div class="admin-upload-section">
+                            <div class="admin-drop-zone" id="admin-thumbZone">
+                                <i class='bx bx-image-add' style="font-size: 30px; color: #3498db;"></i>
+                                <p>Thumbnail Image</p>
+                                <img id="admin-thumb-preview" src="" alt="Preview">
+                                <div class="file-info" id="admin-thumbName" style="color:#2ecc71; font-size:12px;"></div>
+                                <input type="file" id="admin-thumbInput" accept="image/*" hidden>
+                            </div>
+
+                            <div class="admin-drop-zone" id="admin-fileZone">
+                                <i class='bx bx-file' style="font-size: 30px; color: #3498db;"></i>
+                                <p>Project File</p>
+                                <div class="file-info" id="admin-fileName" style="color:#2ecc71; font-size:12px;"></div>
+                                <input type="file" id="admin-fileInput" hidden>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="admin-btn-submit">✅ Add to Live List</button>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h3>📊 Live Projects</h3>
+                    <div class="admin-table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th class="admin-th">Thumbnail</th>
+                                    <th class="admin-th">Project Name</th>
+                                    <th class="admin-th">Category</th>
+                                    <th class="admin-th">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-projectTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Portfolio Content -->
     <div id="main-content">
@@ -1201,7 +1268,7 @@
                 <a href="#services">Services</a>
                 <a href="#portfolio">Projects</a>
                 <a href="#contact">Contact</a>
-                <a href="login.html" id="adminLoginBtn" style="color: var(--main-color);">Admin</a>
+                <a href="#" id="adminLoginBtn" style="color: var(--main-color);">Admin</a>
                 <i class="fas fa-moon" id="mode-toggle"></i>
             </nav>
         </header>
@@ -1274,510 +1341,477 @@
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     
-<script>
-    // ==================== CONFIGURATION ====================
-   
+    <script>
+        // ==================== CONFIGURATION ====================
+        const VALID_EMAIL = 'priyanshrajput42693@gmail.com';
+        const VALID_PASSWORD = 'Priyansh@123';
 
-if (email === "priyanshrajput42693@gmail.com" && pass === "Priyansh@123") {
-    localStorage.setItem("adminAuth", "active");
-    window.location.href = "index.html#admin"; // Hash lagane se direct open hoga
-}
+        // ==================== DOM ELEMENTS ====================
+        const loginContainer = document.getElementById('loginContainer');
+        const loginForm = document.getElementById('loginForm');
+        const adminUsername = document.getElementById('adminUsername');
+        const loginError = document.getElementById('loginError');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const closeLogin = document.getElementById('closeLogin');
 
-// Check URL hash for admin panel
-if (window.location.hash === '#admin') {
-    openAdminPanel(); // Yeh login hote hi dashboard screen khol dega
-}
+        // ==================== THEME MODE (DARK/LIGHT) ====================
+        function initThemeMode() {
+            const modeToggle = document.querySelector('#mode-toggle');
+            const savedMode = localStorage.getItem('lightMode');
 
-    // ==================== DOM ELEMENTS ====================
-    const loginContainer = document.getElementById('loginContainer');
-    const loginForm = document.getElementById('loginForm');
-    const adminUsername = document.getElementById('adminUsername');
-    const loginError = document.getElementById('loginError');
-    const adminLoginBtn = document.getElementById('adminLoginBtn');
-    const closeLogin = document.getElementById('closeLogin');
-
-    // ==================== THEME MODE (DARK/LIGHT) ====================
-    function initThemeMode() {
-        const modeToggle = document.querySelector('#mode-toggle');
-        if (!modeToggle) return;
-        const savedMode = localStorage.getItem('lightMode');
-
-        if (savedMode === 'true') {
-            document.body.classList.add('light-mode');
-            modeToggle.classList.replace('fa-moon', 'fa-sun');
-        }
-
-        modeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            modeToggle.classList.toggle('fa-sun');
-            modeToggle.classList.toggle('fa-moon');
-            localStorage.setItem('lightMode', isLight);
-        });
-    }
-
-    // ==================== MOBILE MENU ====================
-    function initMobileMenu() {
-        const menuIcon = document.getElementById('menu-icon');
-        const navbar = document.getElementById('navbar');
-        if (!menuIcon || !navbar) return;
-        const navLinks = navbar.querySelectorAll('a');
-
-        menuIcon.addEventListener('click', () => {
-            navbar.classList.toggle('active');
-            menuIcon.classList.toggle('fa-times');
-            menuIcon.classList.toggle('fa-bars');
-        });
-
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navbar.classList.remove('active');
-                menuIcon.classList.remove('fa-times');
-                menuIcon.classList.add('fa-bars');
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!menuIcon.contains(e.target) && !navbar.contains(e.target)) {
-                navbar.classList.remove('active');
-                menuIcon.classList.remove('fa-times');
-                menuIcon.classList.add('fa-bars');
+            if (savedMode === 'true') {
+                document.body.classList.add('light-mode');
+                modeToggle.classList.replace('fa-moon', 'fa-sun');
             }
-        });
-    }
 
-    // ==================== AUTH SYSTEM ====================
-    function isLoggedIn() {
-        const loggedIn = localStorage.getItem('isLoggedIn');
-        const userEmail = localStorage.getItem('userEmail');
-        return loggedIn === 'true' && userEmail;
-    }
-
-    function logout() {
-        if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userEmail');
-            closeAdminPanel();
-            loadDynamicProjects(); // Content refresh ke liye
-            alert('Logged out successfully!');
+            modeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                const isLight = document.body.classList.contains('light-mode');
+                modeToggle.classList.toggle('fa-sun');
+                modeToggle.classList.toggle('fa-moon');
+                localStorage.setItem('lightMode', isLight);
+            });
         }
-    }
 
-    // ==================== LOGIN FORM LOGIC ====================
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
+        // ==================== MOBILE MENU ====================
+        function initMobileMenu() {
+            const menuIcon = document.getElementById('menu-icon');
+            const navbar = document.getElementById('navbar');
+            const navLinks = navbar.querySelectorAll('a');
 
-            if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userEmail', email);
-                
-                if (adminUsername) {
-                    const displayEmail = email.split('@')[0];
-                    adminUsername.textContent = displayEmail;
+            menuIcon.addEventListener('click', () => {
+                navbar.classList.toggle('active');
+                menuIcon.classList.toggle('fa-times');
+                menuIcon.classList.toggle('fa-bars');
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    navbar.classList.remove('active');
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!menuIcon.contains(e.target) && !navbar.contains(e.target)) {
+                    navbar.classList.remove('active');
+                    menuIcon.classList.remove('fa-times');
+                    menuIcon.classList.add('fa-bars');
                 }
-                
+            });
+        }
+
+        // ==================== AUTH SYSTEM ====================
+        function isLoggedIn() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userEmail = localStorage.getItem('userEmail');
+            return isLoggedIn === 'true' && userEmail;
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userEmail');
+                closeAdminPanel();
+                alert('Logged out successfully!');
+            }
+        }
+
+        // ==================== LOGIN FORM LOGIC ====================
+        if (loginForm) {
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value;
+
+                if (email === VALID_EMAIL && password === VALID_PASSWORD) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userEmail', email);
+                    
+                    if (adminUsername) {
+                        const displayEmail = email.split('@')[0];
+                        adminUsername.textContent = displayEmail;
+                    }
+                    
+                    loginContainer.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    loginError.style.display = 'none';
+                    loginForm.reset();
+                    
+                    // Auto open admin panel after login
+                    openAdminPanel();
+                } else {
+                    loginError.style.display = 'block';
+                    document.getElementById('loginPassword').value = '';
+                }
+            });
+        }
+
+        // ==================== ADMIN PANEL TOGGLE ====================
+        function openAdminPanel() {
+            // Check if user is logged in
+            if (!isLoggedIn()) {
+                loginContainer.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                return;
+            }
+            
+            document.getElementById('admin-panel-container').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
+            document.body.style.overflow = 'hidden';
+            
+            // Refresh admin data
+            if (typeof loadAdminProjects === 'function') {
+                loadAdminProjects();
+            }
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-panel-container').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.body.style.overflow = 'auto';
+        }
+
+        function backToPortfolio() {
+            closeAdminPanel();
+        }
+
+        // ==================== TYPING ANIMATION ====================
+        function initTyping() {
+            if (typeof Typed !== 'undefined') {
+                new Typed('.typing', {
+                    strings: ['Web Architect', 'UI/UX Sorcerer', 'Full Stack Developer', 'Code Wizard'],
+                    typeSpeed: 70,
+                    backSpeed: 50,
+                    loop: true
+                });
+            }
+        }
+
+        // ==================== SCROLL REVEAL ====================
+        function initScrollReveal() {
+            if (typeof ScrollReveal !== 'undefined') {
+                ScrollReveal().reveal('.home-content, .home-img, .card, .portfolio-box', {
+                    distance: '50px',
+                    duration: 1000,
+                    delay: 200,
+                    origin: 'bottom',
+                    interval: 150
+                });
+            }
+        }
+
+        // ==================== ROCKET TO TOP ====================
+        function initRocketBtn() {
+            const rocketBtn = document.querySelector('#rocketBtn');
+            if (!rocketBtn) return;
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    rocketBtn.classList.add('active');
+                } else {
+                    rocketBtn.classList.remove('active');
+                }
+            });
+
+            rocketBtn.onclick = () => {
+                rocketBtn.classList.add('launching');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setTimeout(() => rocketBtn.classList.remove('launching'), 1000);
+            };
+        }
+
+        // ==================== CURSOR SYSTEM ====================
+        function initCursor() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile || window.innerWidth <= 768) {
+                return;
+            }
+
+            const cursor = document.getElementById('cursor');
+            const cursorBlur = document.getElementById('cursor-blur');
+
+            cursor.style.display = 'block';
+            cursorBlur.style.display = 'block';
+            document.body.style.cursor = 'none';
+
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                cursorBlur.style.left = e.clientX + 'px';
+                cursorBlur.style.top = e.clientY + 'px';
+            });
+
+            const hoverElements = document.querySelectorAll('a, button, .btn, .card, .portfolio-box');
+            hoverElements.forEach(element => {
+                element.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover');
+                });
+                element.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover');
+                });
+            });
+
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    cursor.style.display = 'none';
+                    cursorBlur.style.display = 'none';
+                });
+                input.addEventListener('blur', () => {
+                    cursor.style.display = 'block';
+                    cursorBlur.style.display = 'block';
+                });
+            });
+        }
+
+        // ==================== ADMIN PANEL FUNCTIONALITY ====================
+        function initAdminPanel() {
+            const adminProjectForm = document.getElementById('admin-projectForm');
+            const adminProjectTableBody = document.getElementById('admin-projectTableBody');
+            let adminSelectedThumbBase64 = "";
+
+            function setupAdminZone(zoneId, inputId, infoId, isThumb) {
+                const zone = document.getElementById(zoneId);
+                const input = document.getElementById(inputId);
+                const info = document.getElementById(infoId);
+
+                zone.onclick = () => input.click();
+                zone.ondragover = (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                };
+                zone.ondragleave = () => zone.classList.remove('drag-over');
+                zone.ondrop = (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    handleFiles(e.dataTransfer.files[0]);
+                };
+                input.onchange = (e) => handleFiles(e.target.files[0]);
+
+                function handleFiles(file) {
+                    if (!file) return;
+                    info.innerText = "✓ " + file.name;
+
+                    if (isThumb) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            adminSelectedThumbBase64 = e.target.result;
+                            const preview = document.getElementById('admin-thumb-preview');
+                            preview.src = adminSelectedThumbBase64;
+                            preview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+
+            setupAdminZone('admin-thumbZone', 'admin-thumbInput', 'admin-thumbName', true);
+            setupAdminZone('admin-fileZone', 'admin-fileInput', 'admin-fileName', false);
+
+            function loadAdminProjects() {
+                const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+                adminProjectTableBody.innerHTML = "";
+
+                if (projects.length === 0) {
+                    adminProjectTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 30px; color: #888;">
+                                <i class="fas fa-folder-open" style="font-size: 30px; margin-bottom: 10px;"></i>
+                                <p>No projects added yet</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                projects.forEach((proj, index) => {
+                    adminProjectTableBody.innerHTML += `
+                        <tr>
+                            <td><img src="${proj.thumb || 'https://via.placeholder.com/50'}" class="admin-row-thumb"></td>
+                            <td><b>${proj.title}</b></td>
+                            <td>${proj.category || 'Web App'}</td>
+                            <td><button type="button" class="admin-delete-btn" onclick="deleteAdminProject(${index})">Delete</button></td>
+                        </tr>
+                    `;
+                });
+            }
+
+            adminProjectForm.onsubmit = (e) => {
+                e.preventDefault();
+                const title = document.getElementById('admin-pTitle').value;
+                const category = document.getElementById('admin-pCategory').value;
+
+                if (!title || !category) {
+                    alert('Please fill all fields!');
+                    return;
+                }
+
+                const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+                projects.push({
+                    title,
+                    category,
+                    thumb: adminSelectedThumbBase64,
+                    cat: category,
+                    date: new Date().toLocaleDateString()
+                });
+                localStorage.setItem('myProjects', JSON.stringify(projects));
+
+                adminProjectForm.reset();
+                document.getElementById('admin-thumb-preview').style.display = 'none';
+                document.getElementById('admin-thumbName').innerText = "";
+                document.getElementById('admin-fileName').innerText = "";
+                adminSelectedThumbBase64 = "";
+                loadAdminProjects();
+                loadDynamicProjects();
+                alert("✅ Project Added Successfully!");
+            };
+
+            window.deleteAdminProject = (index) => {
+                if (confirm("Delete this project?")) {
+                    const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+                    projects.splice(index, 1);
+                    localStorage.setItem('myProjects', JSON.stringify(projects));
+                    loadAdminProjects();
+                    loadDynamicProjects();
+                }
+            };
+
+            loadAdminProjects();
+        }
+
+        // ==================== DYNAMIC PROJECTS ====================
+        function loadDynamicProjects() {
+            const container = document.getElementById('projectContainer');
+            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
+
+            if (projects.length === 0) {
+                container.innerHTML = `
+                    <div class="portfolio-box" data-tilt>
+                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="E-commerce Platform">
+                        <div class="portfolio-layer">
+                            <h4>E-commerce Platform</h4>
+                            <p>Full Stack Web App</p>
+                            <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>
+                    <div class="portfolio-box" data-tilt>
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1115&q=80" alt="Analytics Dashboard">
+                        <div class="portfolio-layer">
+                            <h4>Analytics Dashboard</h4>
+                            <p>Data Visualization</p>
+                            <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>
+                    <div class="portfolio-box" data-tilt>
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="Mobile App UI">
+                        <div class="portfolio-layer">
+                            <h4>Mobile App UI</h4>
+                            <p>React Native</p>
+                            <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = projects.map((proj, index) => `
+                    <div class="portfolio-box" data-tilt>
+                        <img src="${proj.thumb || 'https://via.placeholder.com/350x350'}" alt="${proj.title}">
+                        <div class="portfolio-layer">
+                            <h4>${proj.title}</h4>
+                            <p>${proj.cat || 'Web App'}</p>
+                            <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>`).join('');
+            }
+
+            // Initialize tilt effect
+            if (typeof VanillaTilt !== 'undefined') {
+                VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+                    max: 15,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.2
+                });
+            }
+        }
+
+        // ==================== CONTACT FORM ====================
+        function initContactForm() {
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const submitBtn = document.getElementById('submit-btn');
+                    const formStatus = document.getElementById('form-status');
+
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+                    setTimeout(() => {
+                        formStatus.textContent = '✅ Message sent successfully!';
+                        formStatus.style.color = '#2ecc71';
+                        formStatus.style.display = 'block';
+                        contactForm.reset();
+
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Send Message';
+
+                        setTimeout(() => {
+                            formStatus.style.display = 'none';
+                        }, 5000);
+                    }, 1500);
+                });
+            }
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        if (adminLoginBtn) {
+            adminLoginBtn.onclick = (e) => {
+                e.preventDefault();
+                openAdminPanel();
+            };
+        }
+
+        if (closeLogin) {
+            closeLogin.onclick = function () {
                 loginContainer.style.display = 'none';
                 document.body.style.overflow = 'auto';
                 loginError.style.display = 'none';
                 loginForm.reset();
-                
+            };
+        }
+
+        // ==================== INITIALIZE ALL FUNCTIONS ====================
+        window.addEventListener('DOMContentLoaded', function () {
+            initThemeMode();
+            initMobileMenu();
+            initTyping();
+            initScrollReveal();
+            initRocketBtn();
+            initCursor();
+            initAdminPanel();
+            initContactForm();
+            
+            loadDynamicProjects();
+            
+            // Check URL hash for admin panel
+            if (window.location.hash === '#admin') {
                 openAdminPanel();
-            } else {
-                loginError.style.display = 'block';
-                document.getElementById('loginPassword').value = '';
-            }
-        });
-    }
-
-    // ==================== ADMIN PANEL TOGGLE ====================
-    function openAdminPanel() {
-        if (!isLoggedIn()) {
-            if (loginContainer) {
-                loginContainer.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-            return;
-        }
-        
-        const adminContainer = document.getElementById('admin-panel-container');
-        const mainContent = document.getElementById('main-content');
-        
-        if (adminContainer) adminContainer.style.display = 'block';
-        if (mainContent) mainContent.style.display = 'none';
-        document.body.style.overflow = 'hidden';
-        
-        loadAdminProjects();
-    }
-
-    function closeAdminPanel() {
-        const adminContainer = document.getElementById('admin-panel-container');
-        const mainContent = document.getElementById('main-content');
-        
-        if (adminContainer) adminContainer.style.display = 'none';
-        if (mainContent) mainContent.style.display = 'block';
-        document.body.style.overflow = 'auto';
-    }
-
-    function backToPortfolio() {
-        closeAdminPanel();
-        loadDynamicProjects(); 
-    }
-
-    // ==================== TYPING ANIMATION ====================
-    function initTyping() {
-        if (typeof Typed !== 'undefined' && document.querySelector('.typing')) {
-            new Typed('.typing', {
-                strings: ['Web Architect', 'UI/UX Sorcerer', 'Full Stack Developer', 'Code Wizard'],
-                typeSpeed: 70,
-                backSpeed: 50,
-                loop: true
-            });
-        }
-    }
-
-    // ==================== SCROLL REVEAL ====================
-    function initScrollReveal() {
-        if (typeof ScrollReveal !== 'undefined') {
-            ScrollReveal().reveal('.home-content, .home-img, .card, .portfolio-box', {
-                distance: '50px',
-                duration: 1000,
-                delay: 200,
-                origin: 'bottom',
-                interval: 150
-            });
-        }
-    }
-
-    // ==================== ROCKET TO TOP ====================
-    function initRocketBtn() {
-        const rocketBtn = document.querySelector('#rocketBtn');
-        if (!rocketBtn) return;
-        
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 500) {
-                rocketBtn.classList.add('active');
-            } else {
-                rocketBtn.classList.remove('active');
             }
         });
 
-        rocketBtn.onclick = () => {
-            rocketBtn.classList.add('launching');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => rocketBtn.classList.remove('launching'), 1000);
-        };
-    }
-
-    // ==================== CURSOR SYSTEM ====================
-    function initCursor() {
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        if (isMobile || window.innerWidth <= 768) return;
-
-        const cursor = document.getElementById('cursor');
-        const cursorBlur = document.getElementById('cursor-blur');
-        if (!cursor || !cursorBlur) return;
-
-        cursor.style.display = 'block';
-        cursorBlur.style.display = 'block';
-        document.body.style.cursor = 'none';
-
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            cursorBlur.style.left = e.clientX + 'px';
-            cursorBlur.style.top = e.clientY + 'px';
-        });
-
-        const hoverElements = document.querySelectorAll('a, button, .btn, .card, .portfolio-box');
-        hoverElements.forEach(element => {
-            element.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            element.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-
-        const inputs = document.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                cursor.style.display = 'none';
-                cursorBlur.style.display = 'none';
-            });
-            input.addEventListener('blur', () => {
-                cursor.style.display = 'block';
-                cursorBlur.style.display = 'block';
-            });
-        });
-    }
-
-    // ==================== ADMIN PANEL FORM HANDLE ====================
-    let adminSelectedThumbBase64 = "";
-    let adminSelectedFileBase64 = "";
-
-    function initAdminPanel() {
-        const adminProjectForm = document.getElementById('admin-projectForm');
-        if (!adminProjectForm) return;
-
-        function setupAdminZone(zoneId, inputId, infoId, isThumb) {
-            const zone = document.getElementById(zoneId);
-            const input = document.getElementById(inputId);
-            const info = document.getElementById(infoId);
-            if (!zone || !input) return;
-
-            zone.onclick = () => input.click();
-            zone.ondragover = (e) => {
-                e.preventDefault();
-                zone.classList.add('drag-over');
-            };
-            zone.ondragleave = () => zone.classList.remove('drag-over');
-            zone.ondrop = (e) => {
-                e.preventDefault();
-                zone.classList.remove('drag-over');
-                if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files[0]);
-            };
-            input.onchange = (e) => {
-                if (e.target.files.length > 0) handleFiles(e.target.files[0]);
-            };
-
-            function handleFiles(file) {
-                if (!file) return;
-                if (info) info.innerText = "✓ " + file.name;
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    if (isThumb) {
-                        adminSelectedThumbBase64 = e.target.result;
-                        const preview = document.getElementById('admin-thumb-preview');
-                        if (preview) {
-                            preview.src = adminSelectedThumbBase64;
-                            preview.style.display = 'block';
-                        }
-                    } else {
-                        adminSelectedFileBase64 = e.target.result;
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        setupAdminZone('admin-thumbZone', 'admin-thumbInput', 'admin-thumbName', true);
-        setupAdminZone('admin-fileZone', 'admin-fileInput', 'admin-fileName', false);
-
-        adminProjectForm.onsubmit = (e) => {
-            e.preventDefault();
-            const title = document.getElementById('admin-pTitle').value.trim();
-            const category = document.getElementById('admin-pCategory').value.trim();
-
-            if (!title || !category) {
-                alert('Please fill all fields!');
-                return;
-            }
-
-            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-            projects.push({
-                id: Date.now(),
-                title: title,
-                category: category,
-                thumb: adminSelectedThumbBase64,
-                fileContent: adminSelectedFileBase64,
-                date: new Date().toLocaleDateString()
-            });
+        // Make functions available globally
+        window.openAdminPanel = openAdminPanel;
+        window.closeAdminPanel = closeAdminPanel;
             
-            localStorage.setItem('myProjects', JSON.stringify(projects));
-
-            adminProjectForm.reset();
-            const preview = document.getElementById('admin-thumb-preview');
-            if (preview) preview.style.display = 'none';
-            
-            if (document.getElementById('admin-thumbName')) document.getElementById('admin-thumbName').innerText = "";
-            if (document.getElementById('admin-fileName')) document.getElementById('admin-fileName').innerText = "";
-            
-            adminSelectedThumbBase64 = "";
-            adminSelectedFileBase64 = "";
-            
-            loadAdminProjects();
-            loadDynamicProjects();
-            alert("✅ Project Added Successfully!");
-        };
-    }
-
-    // ==================== ADMIN DASHBOARD TABLE RENDER ====================
-    function loadAdminProjects() {
-        const adminProjectTableBody = document.getElementById('admin-projectTableBody');
-        if (!adminProjectTableBody) return;
-
-        const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-        adminProjectTableBody.innerHTML = "";
-
-        if (projects.length === 0) {
-            adminProjectTableBody.innerHTML = `
-                <tr>
-                    <td colspan="4" style="text-align: center; padding: 30px; color: #888;">
-                        <i class="fas fa-folder-open" style="font-size: 30px; margin-bottom: 10px;"></i>
-                        <p>No projects added yet</p>
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-
-        projects.forEach((proj, index) => {
-            adminProjectTableBody.innerHTML += `
-                <tr>
-                    <td><img src="${proj.thumb || 'https://via.placeholder.com/50'}" class="admin-row-thumb" style="width:50px; height:50px; object-fit:cover; border-radius:4px;"></td>
-                    <td><b style="color:#fff;">${proj.title}</b></td>
-                    <td><span style="background:rgba(52,152,219,0.2); color:#3498db; padding:3px 8px; border-radius:4px; font-size:11px;">${proj.category.toUpperCase()}</span></td>
-                    <td><button type="button" class="admin-logout-btn" style="padding:5px 10px; background:#e74c3c; font-size:12px;" onclick="deleteAdminProject(${index})"><i class="fas fa-trash"></i> Delete</button></td>
-                </tr>
-            `;
-        });
-    }
-
-    window.deleteAdminProject = (index) => {
-        if (confirm("Delete this project?")) {
-            const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-            projects.splice(index, 1);
-            localStorage.setItem('myProjects', JSON.stringify(projects));
-            loadAdminProjects();
-            loadDynamicProjects();
-        }
-    };
-
-    // ==================== DYNAMIC PORTFOLIO HOME RENDERING ====================
-    function loadDynamicProjects() {
-        const container = document.getElementById('projectContainer');
-        if (!container) return;
-
-        const projects = JSON.parse(localStorage.getItem('myProjects')) || [];
-
-        // Case 1: Agar admin panel se koi project add nahi hua hai to default placeholders dikhao
-        if (projects.length === 0) {
-            container.innerHTML = `
-                <div class="portfolio-box" data-tilt>
-                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="E-commerce Platform">
-                    <div class="portfolio-layer">
-                        <h4>E-commerce Platform</h4>
-                        <p>Full Stack Web App</p>
-                        <a href="#"><i class="fas fa-external-link-alt"></i></a>
-                    </div>
-                </div>
-                <div class="portfolio-box" data-tilt>
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1115&q=80" alt="Analytics Dashboard">
-                    <div class="portfolio-layer">
-                        <h4>Analytics Dashboard</h4>
-                        <p>Data Visualization</p>
-                        <a href="#"><i class="fas fa-external-link-alt"></i></a>
-                    </div>
-                </div>
-                <div class="portfolio-box" data-tilt>
-                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="Mobile App UI">
-                    <div class="portfolio-layer">
-                        <h4>Mobile App UI</h4>
-                        <p>React Native</p>
-                        <a href="#"><i class="fas fa-external-link-alt"></i></a>
-                    </div>
-                </div>
-            `;
-        } else {
-            // Case 2: Agar projects exist karte hain to array data loop karke insert karein
-            container.innerHTML = projects.map(proj => `
-                <div class="portfolio-box" data-tilt>
-                    <img src="${proj.thumb || 'https://via.placeholder.com/350x350'}" alt="${proj.title}" style="width: 100%; height: 100%; object-fit: cover;">
-                    <div class="portfolio-layer">
-                        <h4>${proj.title}</h4>
-                        <p>${proj.category ? proj.category.toUpperCase() : 'WEB DEVELOPMENT'}</p>
-                        <a href="${proj.fileContent || '#'}" target="_blank">
-                            <i class='bx bx-link-external'></i>
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // VanillaTilt and ScrollReveal modules synchronization refresh
-        if (typeof VanillaTilt !== 'undefined') {
-            VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
-                max: 15,
-                speed: 400,
-                glare: true,
-                "max-glare": 0.2
-            });
-        }
-        if (typeof ScrollReveal !== 'undefined') {
-            ScrollReveal().sync();
-        }
-    }
-
-    // ==================== CONTACT FORM ====================
-    function initContactForm() {
-        const contactForm = document.getElementById('contact-form');
-        if (contactForm) {
-            contactForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const submitBtn = document.getElementById('submit-btn');
-                const formStatus = document.getElementById('form-status');
-
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-
-                setTimeout(() => {
-                    formStatus.textContent = '✅ Message sent successfully!';
-                    formStatus.style.color = '#2ecc71';
-                    formStatus.style.display = 'block';
-                    contactForm.reset();
-
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = 'Send Message';
-
-                    setTimeout(() => {
-                        formStatus.style.display = 'none';
-                    }, 5000);
-                }, 1500);
-            });
-        }
-    }
-
-    // ==================== INITIALIZATION ENGINE ====================
-    if (adminLoginBtn) {
-        adminLoginBtn.onclick = (e) => {
-            e.preventDefault();
-            openAdminPanel();
-        };
-    }
-
-    if (closeLogin) {
-        closeLogin.onclick = function () {
-            if (loginContainer) loginContainer.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            if (loginError) loginError.style.display = 'none';
-            if (loginForm) loginForm.reset();
-        };
-    }
-
-    window.addEventListener('DOMContentLoaded', function () {
-        initThemeMode();
-        initMobileMenu();
-        initTyping();
-        initScrollReveal();
-        initRocketBtn();
-        initCursor();
-        initAdminPanel();
-        initContactForm();
-        
-        loadDynamicProjects();
-        
-        if (window.location.hash === '#admin') {
-            openAdminPanel();
-        }
-    });
-
-    // Global scoping declarations
-    window.openAdminPanel = openAdminPanel;
-    window.closeAdminPanel = closeAdminPanel;
-    window.logout = logout;
-    window.backToPortfolio = backToPortfolio;
-    window.isLoggedIn = isLoggedIn;
-</script>
+        window.logout = logout;
+        window.backToPortfolio = backToPortfolio;
+        window.deleteAdminProject = deleteAdminProject;
+        window.isLoggedIn = isLoggedIn;
+    </script>
 </body>
 </html>
         
