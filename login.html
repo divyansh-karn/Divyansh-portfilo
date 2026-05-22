@@ -145,36 +145,32 @@
     </div>
 
     <script>
-
     document.getElementById('loginForm').onsubmit = (e) => {
-    e.preventDefault();
-    
-    const email = document.getElementById('email').value.trim();
-    const pass = document.getElementById('pass').value.trim();
-    const btnTxt = document.getElementById('lTxt');
-    const btnSpin = document.getElementById('lSpin');
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value.trim();
+        const pass = document.getElementById('pass').value.trim();
+        const btnTxt = document.getElementById('lTxt');
+        const btnSpin = document.getElementById('lSpin');
 
-    // Loading spinner dikhayein
-    btnTxt.style.display = 'none';
-    btnSpin.style.display = 'block';
+        // Loading spinner dikhayein
+        btnTxt.style.display = 'none';
+        btnSpin.style.display = 'block';
 
-    setTimeout(() => {
-        // Details Check Karein
-        if (email === "priyanshrajput42693@gmail.com" && pass === "Priyansh@123") {
-            // Auth active karein
-            localStorage.setItem("adminAuth", "active");
-            
-            // Seedhe admin dashboard par bhejien
-            window.location.href = "admin.html"; 
-        } else {
-            // Error handling
-            btnTxt.style.display = 'block';
-            btnSpin.style.display = 'none';
-            document.getElementById('err').style.display = 'block';
-            alert("Galti hai! Email ya Password sahi nahi hai.");
-        }
-    }, 1000);
-};
+        setTimeout(() => {
+            // Sahi Details Check Karein
+            if (email === "priyanshrajput42693@gmail.com" && pass === "Priyansh@123") {
+                localStorage.setItem("adminAuth", "active");
+                window.location.href = "index.html"; 
+            } else {
+                // Error dikhayein
+                btnTxt.style.display = 'block';
+                btnSpin.style.display = 'none';
+                document.getElementById('err').style.display = 'block';
+                alert("Galti hai! Email ya Password sahi nahi hai.");
+            }
+        }, 1000);
+    };
     </script>
     
 </body>
